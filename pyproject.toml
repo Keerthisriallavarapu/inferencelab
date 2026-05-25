@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "inferencelab"
+version = "0.1.0"
+description = "LLM inference optimization research: speculative decoding, batching, KV-cache, quantization."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+
+dependencies = [
+  "numpy>=1.26.0",
+  "pandas>=2.2.0",
+  "pyarrow>=17.0.0",
+  "typer>=0.12.0",
+  "rich>=13.8.0",
+  "tqdm>=4.66.0",
+  "matplotlib>=3.9.0",
+  "seaborn>=0.13.0",
+  "structlog>=24.4.0",
+]
+
+[project.optional-dependencies]
+# GPU deps. Install with: pip install -e ".[gpu]"
+# These are heavy and the CPU-only path supports the benchmark harness
+# and visualization for users without a GPU.
+gpu = [
+  "torch>=2.5.0",
+  "transformers>=4.46.0",
+  "accelerate>=1.0.0",
+  "bitsandbytes>=0.44.0",
+]
+dev = [
+  "pytest>=8.3.0",
+  "pytest-asyncio>=0.24.0",
+  "ruff>=0.6.0",
+  "mypy>=1.11.0",
+]
+
+[project.scripts]
+inferencelab = "inferencelab.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["inferencelab"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
